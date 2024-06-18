@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Examples</title>
+</head>
+<body>
+    <h1>Examples</h1>
+    <ul>
+        {% for test in tests %}
+            <li>{{ test.name }} - {{ test.created_at }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
