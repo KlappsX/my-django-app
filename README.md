@@ -1,1 +1,1 @@
-Python, Django, MySQL, Javascript, Html, Css, Tailwind, TablePlus
+Python, Django, MySQL, Node.js, npm, Javascript, Html, Css, Tailwind, TablePlus
