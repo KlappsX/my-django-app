@@ -1,14 +1,25 @@
+{% extends "myapp/base.html" %}
+
+{% load static%}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Examples</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My News Site{% endblock %}</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <h1>Examples</h1>
-    <ul>
-        {% for test in tests %}
-            <li>{{ test.name }} - {{ test.created_at }}</li>
-        {% endfor %}
-    </ul>
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto">
+            <a class="text-white" href="{% url 'news-home' %}">Home</a>
+            <a class="text-white ml-4" href="{% url 'register' %}">Register</a>
+            <a class="text-white ml-4" href="{% url 'profile' %}">Profile</a>
+        </div>
+    </nav>
+    <div class="container mx-auto mt-4">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

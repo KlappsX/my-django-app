@@ -1,0 +1,33 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Post Detail{% endblock %}
+{% block content %}
+<div class="container mx-auto mt-4">
+    <div class="bg-white p-4 mb-4 shadow-md rounded">
+        <h2 class="text-3xl font-bold">{{ post.title }}</h2>
+        <p class="text-gray-700">{{ post.content }}</p>
+        <p>Posted by {{ post.author }}</p>
+        <div>
+            <a href="{% url 'post-react' post.id 'like' %}" class="text-blue-500 hover:underline">Like</a>
+            <a href="{% url 'post-react' post.id 'dislike' %}" class="text-red-500 hover:underline">Dislike</a>
+        </div>
+    </div>
+    <h3 class="text-2xl font-bold mb-4">Comments</h3>
+    {% for comment in comments %}
+    <div class="bg-white p-4 mb-4 shadow-md rounded">
+        <p>{{ comment.content }}</p>
+        <p>Commented by {{ comment.author }}</p>
+        <div>
+            <a href="{% url 'comment-react' comment.id 'like' %}" class="text-blue-500 hover:underline">Like</a>
+            <a href="{% url 'comment-react' comment.id 'dislike' %}" class="text-red-500 hover:underline">Dislike</a>
+        </div>
+    </div>
+    {% endfor %}
+    <h3 class="text-2xl font-bold mb-4">Add a Comment</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Add Comment</button>
+    </form>
+</div>
+{% endblock %}

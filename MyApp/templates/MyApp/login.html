@@ -1,0 +1,14 @@
+{% extends "myapp/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 border border-gray-300">
+    <h2 class="text-2xl font-bold mb-4">Login</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+    </form>
+</div>
+{% endblock %}
