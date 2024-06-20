@@ -2,25 +2,32 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 <div class="flex justify-center mt-12">
-  <div class="max-w-md w-full bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-    <form method="POST">
-      {% csrf_token %}
-      <div class="space-y-4">
-        <div>
-          {{ form.username.label_tag }}
-          {{ form.username }}
+    <div class="max-w-md w-full bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                </div>
+                <div>
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-4">Login</button>
+        </form>
+        <div class="text-center mt-4">
+            <a href="{% url 'password_reset' %}" class="text-blue-500 hover:underline">Forgot Password?</a>
         </div>
-        <div>
-          {{ form.password.label_tag }}
-          {{ form.password }}
+        {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
         </div>
-      </div>
-      <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded mt-4">Login</button>
-    </form>
-    <div class="text-center mt-4">
-      <a href="{% url 'password_reset' %}" class="text-blue-500 hover:underline">Forgot Password?</a>
+        {% endif %}
     </div>
-  </div>
 </div>
 {% endblock %}

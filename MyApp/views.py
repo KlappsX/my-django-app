@@ -1,22 +1,43 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
-from .forms import UserRegisterForm, ProfileUpdateForm, PostForm, CommentForm
+from .forms import CustomAuthenticationForm, CustomUserCreationForm, ProfileUpdateForm, PostForm, CommentForm
 from .models import Post, Profile, Comment, Reaction
-
-class CustomLoginView(LoginView):
-    template_name = 'myapp/login.html'
 
 def home(request):
     posts = Post.objects.all()
-    return render(request, 'myapp/home.html', {'posts': posts})
+    return render(request, 'MyApp/home.html', {'posts': posts})
+
+class CustomLoginView(LoginView):
+    template_name = 'MyApp/login.html'
+
+def custom_login_view(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('news-home')
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            if not User.objects.filter(username=request.POST['username']).exists():
+                messages.error(request, "Account with this user doesn't exist, please register.")
+            else:
+                messages.error(request, "Incorrect password!")
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'MyApp/login.html', {'form': form})
 
 def register(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -26,8 +47,8 @@ def register(request):
             messages.success(request, f'Your account has been created! You are now logged in as {username}.')
             return redirect('news-home')
     else:
-        form = UserRegisterForm()
-    return render(request, 'myapp/register.html', {'form': form})
+        form = CustomUserCreationForm()
+    return render(request, 'MyApp/register.html', {'form': form})
 
 @login_required
 def profile(request):
@@ -39,7 +60,7 @@ def profile(request):
             return redirect('profile')
     else:
         p_form = ProfileUpdateForm(instance=request.user.profile)
-    return render(request, 'myapp/profile.html', {'p_form': p_form})
+    return render(request, 'MyApp/profile.html', {'p_form': p_form})
 
 @login_required
 def create_post(request):
@@ -52,7 +73,7 @@ def create_post(request):
             return redirect('news-home')
     else:
         form = PostForm()
-    return render(request, 'myapp/create_post.html', {'form': form})
+    return render(request, 'MyApp/create_post.html', {'form': form})
 
 @login_required
 def create_comment(request, post_id):
@@ -67,7 +88,7 @@ def create_comment(request, post_id):
             return redirect('post-detail', post_id=post.id)
     else:
         form = CommentForm()
-    return render(request, 'myapp/create_comment.html', {'form': form})
+    return render(request, 'MyApp/create_comment.html', {'form': form})
 
 @login_required
 def react_to_post(request, post_id, reaction_type):
@@ -88,4 +109,4 @@ def react_to_comment(request, comment_id, reaction_type):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = Comment.objects.filter(post=post)
-    return render(request, 'myapp/post_detail.html', {'post': post, 'comments': comments})
+    return render(request, 'MyApp/post_detail.html', {'post': post, 'comments': comments})
