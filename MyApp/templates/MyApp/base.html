@@ -14,7 +14,15 @@
       <div class="text-white">
         <a class="hover:underline mr-4" href="{% url 'news-home' %}">Home</a>
         <a class="hover:underline mr-4" href="{% url 'register' %}">Register</a>
-        <a class="hover:underline" href="{% url 'profile' %}">Profile</a>
+        <a class="hover:underline mr-4" href="{% url 'profile' %}">Profile</a>
+      </div>
+      <div class="text-white">
+        {% if user.is_authenticated %}
+          <span class="mr-4">Hello, {{ user.username }}</span>
+          <a class="hover:underline mr-4" href="{% url 'logout' %}">Logout</a>
+        {% else %}
+          <a class="hover:underline mr-4" href="{% url 'login' %}">Login</a>
+        {% endif %}
       </div>
     </div>
   </nav>
